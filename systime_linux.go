@@ -11,7 +11,7 @@ import (
 
 type linuxSysTime struct{}
 
-func (linuxSysTime) SetLocalTime(t time.Time) error {
+func (linuxSysTime) SetLocalTime(t *time.Time) error {
 
 	tv := syscall.NsecToTimeval(t.UnixNano())
 	return syscall.Settimeofday(&tv)

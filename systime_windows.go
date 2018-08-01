@@ -31,7 +31,7 @@ type windowsSYSTEMTIME struct {
 type windowsSysTime struct{}
 
 // SetTime hoge
-func (windowsSysTime) SetLocalTime(t time.Time) (err error) {
+func (windowsSysTime) SetLocalTime(t *time.Time) (err error) {
 
 	st := windowsSYSTEMTIME{
 		wYear:         uint16(t.Year()),
