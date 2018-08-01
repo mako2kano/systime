@@ -28,10 +28,10 @@ type windowsSYSTEMTIME struct {
 	wMilliseconds uint16
 }
 
-type windowsSetTime struct{}
+type windowsSysTime struct{}
 
 // SetTime hoge
-func (windowsSetTime) SetLocalTime(t time.Time) (err error) {
+func (windowsSysTime) SetLocalTime(t *time.Time) (err error) {
 
 	st := windowsSYSTEMTIME{
 		wYear:         uint16(t.Year()),
@@ -60,5 +60,5 @@ func syscallSetLocalTime(st *windowsSYSTEMTIME) error {
 }
 
 func init() {
-	chooseSysTM(windowsSetTime{})
+	chooseSysTM(windowsSysTime{})
 }

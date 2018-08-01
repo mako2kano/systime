@@ -7,7 +7,7 @@ package systime
 import "time"
 
 type systm interface {
-	SetLocalTime(time.Time) error
+	SetLocalTime(*time.Time) error
 }
 
 var (
@@ -19,6 +19,6 @@ func chooseSysTM(choose systm) {
 }
 
 // SetLocalTime is SetTimeOfDay() or SetLocalTime() systemcall.
-func SetLocalTime(t time.Time) error {
+func SetLocalTime(t *time.Time) error {
 	return st.SetLocalTime(t)
 }

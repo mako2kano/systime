@@ -13,7 +13,7 @@ import (
 
 func main() {
 	t := time.Now()
-	err := systime.SetLocalTime(t)
+	err := systime.SetLocalTime(&t)
 
 	fmt.Println(err)
 }
