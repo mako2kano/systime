@@ -17,6 +17,12 @@ func (linuxSysTime) SetLocalTime(t *time.Time) error {
 	return syscall.Settimeofday(&tv)
 }
 
+func (linuxSysTime) SetSystemTime(t *time.Time) error {
+
+	tv := syscall.NsecToTimeval(t.UnixNano())
+	return syscall.Settimeofday(&tv)
+}
+
 func init() {
 	chooseSysTM(linuxSysTime{})
 }

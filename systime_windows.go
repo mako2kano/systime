@@ -13,8 +13,9 @@ import (
 )
 
 var (
-	modkernel32      = windows.NewLazySystemDLL("kernel32.dll")
-	procSetLocalTime = modkernel32.NewProc("SetLocalTime")
+	modkernel32       = windows.NewLazySystemDLL("kernel32.dll")
+	procSetLocalTime  = modkernel32.NewProc("SetLocalTime")
+	procSetSystemTime = modkernel32.NewProc("SetSystemTime")
 )
 
 type windowsSYSTEMTIME struct {
@@ -30,7 +31,8 @@ type windowsSYSTEMTIME struct {
 
 type windowsSysTime struct{}
 
-// SetTime hoge
+// SetLocalTime (timezone)
+// BOOL SetLocalTime(CONST SYSTEMTIME *lpSystemTime)
 func (windowsSysTime) SetLocalTime(t *time.Time) (err error) {
 
 	st := windowsSYSTEMTIME{
@@ -49,6 +51,36 @@ func (windowsSysTime) SetLocalTime(t *time.Time) (err error) {
 func syscallSetLocalTime(st *windowsSYSTEMTIME) error {
 
 	r0, _, e1 := syscall.Syscall(procSetLocalTime.Addr(), 1, uintptr(unsafe.Pointer(st)), 0, 0)
+
+	// success
+	if r0 != 0 {
+		return nil
+	}
+
+	// fail
+	return e1
+}
+
+// SetSystemTime (UTC)
+// BOOL SetSystemTime(CONST SYSTEMTIME *lpSystemTime)
+func (windowsSysTime) SetSystemTime(t *time.Time) (err error) {
+
+	st := windowsSYSTEMTIME{
+		wYear:         uint16(t.UTC().Year()),
+		wMonth:        uint16(t.UTC().Month()),
+		wDay:          uint16(t.UTC().Day()),
+		wHour:         uint16(t.UTC().Hour()),
+		wMinute:       uint16(t.UTC().Minute()),
+		wSecond:       uint16(t.UTC().Second()),
+		wMilliseconds: uint16(t.UTC().Nanosecond() / 10e6),
+	}
+
+	return syscallSetLocalTime(&st)
+}
+
+func syscallSetSystemTime(st *windowsSYSTEMTIME) error {
+
+	r0, _, e1 := syscall.Syscall(procSetSystemTime.Addr(), 1, uintptr(unsafe.Pointer(st)), 0, 0)
 
 	// success
 	if r0 != 0 {

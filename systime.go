@@ -8,6 +8,7 @@ import "time"
 
 type systm interface {
 	SetLocalTime(*time.Time) error
+	SetSystemTime(*time.Time) error
 }
 
 var (
@@ -21,4 +22,9 @@ func chooseSysTM(choose systm) {
 // SetLocalTime is SetTimeOfDay() or SetLocalTime() systemcall.
 func SetLocalTime(t *time.Time) error {
 	return st.SetLocalTime(t)
+}
+
+// SetSystemTime is SetTimeOfDay() or SetSystemTime() systemcall.
+func SetSystemTime(t *time.Time) error {
+	return st.SetSystemTime(t)
 }
